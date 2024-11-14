@@ -1,22 +1,34 @@
 import tkinter as tk
+import random as r
 
-def move_left(event):
-    ship.move(shuttle, -10, 0)
+class Player():
+    def __init__(self):
+        self.interface = tk.Tk()
+        self.interface.geometry("500x670")
+        self.interface.title("Space Impact")
 
-def move_right(event):
-    ship.move(shuttle, +10, 0)
+        self.ship = tk.Canvas(self.interface, width=500, height=670, background="gray")
+        self.ship.place(x=0, y=0)
+
+        self.shuttle=self.ship.create_rectangle(225, 600, 275, 650, fill="blue")
+
+        self.interface.bind("<Left>", self.move_left)
+        self.interface.bind("<Right>", self.move_right)
+
+    def move_left(self,event):
+        x1, y1, x2, y2 = self.ship.coords(self.shuttle)
+        if x1>0:
+            self.ship.move(self.shuttle, -10, 0)
 
 
-interface = tk.Tk()
-interface.geometry("500x670")
-interface.title("Space Impact")
+    def move_right(self,event):
+        x1, y1, x2, y2 = self.ship.coords(self.shuttle)
+        if x2<500:
+            self.ship.move(self.shuttle, +10, 0)
 
-ship = tk.Canvas(interface, width=500, height=670, background="gray")
-ship.pack()
+    def run(self):
+        self.interface.mainloop()
 
-shuttle=ship.create_rectangle(225, 600, 275, 650, fill="blue")
+game=Player()
 
-interface.bind("<Left>", move_left)
-interface.bind("<Right>", move_right)
-
-interface.mainloop()
+print(game.run())
