@@ -1,6 +1,11 @@
 import tkinter as tk
 import random as r
 
+def run_game():
+    play = Player()
+
+    print(play.run())
+
 class Player():
     def __init__(self):
         self.interface = tk.Tk()
@@ -29,6 +34,3 @@ class Player():
     def run(self):
         self.interface.mainloop()
 
-game=Player()
-
-print(game.run())
