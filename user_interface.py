@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox as mb
+import Game as G
 
 class Account_Entry:
     def __init__(self):
@@ -28,7 +29,7 @@ class Account_Entry:
 
     def user_login(self, User_account, User_password):
         if User_account == self.user_account and User_password == self.user_password:
-            mb.showinfo("Login", "User logged in successfully!")
+            print(G.run_game())
         else:
             mb.showinfo("Can't Log In", "Account or password incorrect")
 
@@ -61,13 +62,13 @@ class Login_Interface:
     entry = Account_Entry()
     def __init__(self):
         self.interface = tk.Tk()
-        self.interface.title("Space Impact")
+        self.interface.title("Select")
         self.interface.geometry("500x700")
 
-        self.user_button = tk.Button(self.interface, text="User", command=self.user_click)
-        self.admin_button = tk.Button(self.interface, text="Admin", command=self.admin_click)
-        self.user_button.place(x=250, y=250)
-        self.admin_button.place(x=244, y=300)
+        self.user_button = tk.Button(self.interface, text="User", font=("Arial", 20), command=self.user_click)
+        self.admin_button = tk.Button(self.interface, text="Admin", font=("Arial", 20), command=self.admin_click)
+        self.user_button.place(relx=0.44, rely=0.4)
+        self.admin_button.place(relx=0.419, rely=0.5)
 
     def user_click(self):
         self.entry.user_click()
