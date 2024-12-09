@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox as mb
 import random as R
-import Admin
 
 def play():
     Game().run()
@@ -14,6 +13,11 @@ class Game():
         
         self.canvas = tk.Canvas(self.Interface, width=500, height=670, bg="black")
         self.canvas.pack()
+
+        self.score = 0
+
+        self.score_label = tk.Label(self.Interface, text="Score: 0", font=("Arial", 14), fg="white", bg="black")
+        self.canvas.create_window(40, 20, window=self.score_label)
 
         self.ship = self.canvas.create_polygon(194, 633, 223, 596, 236, 546, 249, 596, 279, 633, 250, 633, 250, 638, 243, 638, 243, 633, 230, 633, 230, 638, 222, 638, 222, 633, fill="#790D0D")
 
@@ -59,6 +63,11 @@ class Game():
                     self.canvas.delete(bullet_id)
                     self.canvas.delete(enemy_id)
                     self.enemies.remove(enemy_id)
+                    self.update_score()
+
+    def update_score(self):
+        self.score += 1
+        self.score_label.config(text=f"Score: {self.score}")
 
     def create_enemy(self):
         x1 = R.randint(20, 450)
@@ -73,7 +82,7 @@ class Game():
             if y8 < 650:
                 self.canvas.move(enemy_id, 0, +10)
                 self.check_player_collision(enemy_id)
-                self.Interface.after(80, lambda: self.move_enemies(enemy_id))
+                self.Interface.after(100, lambda: self.move_enemies(enemy_id))
             else:
                 self.canvas.delete(enemy_id)
                 self.enemies.remove(enemy_id)
@@ -89,7 +98,7 @@ class Game():
 
     def game_over(self):
         self.Interface.after(500, lambda: self.Interface.destroy())
-        mb.showinfo("Game Over", "You have been destroyed!")
+        mb.showinfo("Game Over", f"Game Over! Your score was {self.score}")
 
     def run(self):
         self.Interface.mainloop()
