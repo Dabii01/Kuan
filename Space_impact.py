@@ -1,5 +1,7 @@
 import tkinter as tk
+from tkinter import messagebox as mb
 import random as R
+import Admin
 
 def play():
     Game().run()
@@ -75,14 +77,19 @@ class Game():
             else:
                 self.canvas.delete(enemy_id)
                 self.enemies.remove(enemy_id)
+                self.game_over()
 
     def check_player_collision(self, enemy_id):
         enemy_x1, enemy_y1, enemy_x2, enemy_y2, enemy_x3, enemy_y3, enemy_x4, enemy_y4, enemy_x5, enemy_y5, enemy_x6, enemy_y6, enemy_x7, enemy_y7, enemy_x8, enemy_y8, enemy_x9, enemy_y9, enemy_x10, enemy_y10, enemy_x11, enemy_y11, enemy_x12, enemy_y12 = self.canvas.coords(enemy_id)
-        x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, x7, y7, x8, y8, x9, y9, x10, y10, x11, y11, x12, y12, x13, y13 = self.canvas.coords(self.ship)
-        if (x5 > enemy_x1 and x1 < enemy_x7) and (y7 < enemy_y8 and y3 > enemy_y2):
+        player_x1, player_y1, player_x2, player_y2, player_x3, player_y3, player_x4, player_y4, player_x5, player_y5, player_x6, player_y6, player_x7, player_y7, player_x8, player_y8, player_x9, player_y9, player_x10, player_y10, player_x11, player_y11, player_x12, player_y12, player_x13, player_y13 = self.canvas.coords(self.ship)
+        if (enemy_x7 > player_x1 and enemy_x1 < player_x5) and (enemy_y8 > player_y3 and enemy_y2 < player_y7):
             self.canvas.delete(enemy_id)
             self.enemies.remove(enemy_id)
-            self.Interface.destroy()
+            self.game_over()
+
+    def game_over(self):
+        self.Interface.after(500, lambda: self.Interface.destroy())
+        mb.showinfo("Game Over", "You have been destroyed!")
 
     def run(self):
         self.Interface.mainloop()
