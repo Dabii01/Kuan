@@ -1,16 +1,53 @@
 import tkinter as tk
 from tkinter import messagebox as mb
 import random as R
+import pickle
 
-def play():
-    Game().run()
+PLAYER_FILE = "player_info.pkl"
+HIGH_SCORE_FILE = "high_score.pkl"
+max = 5
 
-class Game():
+def save_playerinfo(score):
+    try:
+        with open (PLAYER_FILE, "rb") as file:
+            scores = pickle.load(file)
+    except FileExistsError:
+        scores = []
+
+    if len(scores) <= max:
+        scores.append(score)
+    else:
+        scores.pop(0)
+        scores.append(score)
+
+    with open(PLAYER_FILE, "wb")as file:
+        pickle.dump(scores, file)
+
+def load_playerinfo():
+    try:
+        with open(PLAYER_FILE, "rb") as file:
+            return pickle.load(file)
+    except FileNotFoundError:
+        return []
+
+def save_highscore(score):
+    with open(HIGH_SCORE_FILE, "wb") as file:
+        pickle.dump(score, file)
+
+def load_highscore():
+    try:
+        with open(HIGH_SCORE_FILE, "rb") as file:
+            high_score = pickle.load(file)
+        return high_score
+    except FileNotFoundError:
+        return 0
+
+class Game:
     def __init__(self):
         self.Interface = tk.Tk()
         self.Interface.geometry("500x650")
         self.Interface.title("Space Impact")
-        
+
         self.canvas = tk.Canvas(self.Interface, width=500, height=670, bg="black")
         self.canvas.pack()
 
@@ -28,6 +65,8 @@ class Game():
         self.enemies = []
         self.create_enemy()
 
+        self.high_score = load_highscore()
+
     def move_left(self, event):
         x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, x7, y7, x8, y8, x9, y9, x10, y10, x11, y11, x12, y12, x13, y13 = self.canvas.coords(self.ship)
         if x1 > 10:
@@ -40,17 +79,17 @@ class Game():
 
     def shoot(self, event):
         x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, x7, y7, x8, y8, x9, y9, x10, y10, x11, y11, x12, y12, x13, y13 = self.canvas.coords(self.ship)
-        bullet_id = self.canvas.create_oval(x3 - 5, y3 - 10, x3 + 3, y3 +10, fill="blue")
+        bullet_id = self.canvas.create_oval(x3 - 5, y3 - 10, x3 + 3, y3 + 10, fill="blue")
         self.move_bullet(bullet_id)
 
     def move_bullet(self, bullet_id):
         coords = self.canvas.coords(bullet_id)
         if coords:
             x1, y1, x2, y2 = coords
-            if y2 > 0: 
-                self.canvas.move(bullet_id, 0, -10)  
-                self.check_collision(bullet_id) 
-                self.Interface.after(60, lambda: self.move_bullet(bullet_id)) 
+            if y2 > 0:
+                self.canvas.move(bullet_id, 0, -10)
+                self.check_collision(bullet_id)
+                self.Interface.after(60, lambda: self.move_bullet(bullet_id))
             else:
                 self.canvas.delete(bullet_id)
 
@@ -97,10 +136,14 @@ class Game():
             self.game_over()
 
     def game_over(self):
+        if self.score > self.high_score:
+            save_highscore(self.score)
+        save_playerinfo(self.score)  
         self.Interface.after(500, lambda: self.Interface.destroy())
-        mb.showinfo("Game Over", f"Game Over! Your score was {self.score}")
+        mb.showinfo("Game Over", "Your ship was destroyed!")
 
     def run(self):
         self.Interface.mainloop()
 
-play()
+def play():
+    Game().run()

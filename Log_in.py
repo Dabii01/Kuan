@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox as mb
 import customtkinter as ctk
-import Game as SI
-
+import Space_impact as SI
+import Admin
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -56,7 +56,7 @@ class Account_Entry:
 
     def admin_login(self, Admin_account, Admin_password):
         if Admin_account == self.admin_account and Admin_password == self.admin_password:
-            mb.showinfo("Login", "Admin logged in successfully!")
+            Admin.ShowInfo()
         else:
             mb.showinfo("Can't Log In", "Account or password incorrect")
 
